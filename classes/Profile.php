@@ -20,7 +20,7 @@ class profile
     public function __construct()
     {
         // sensible defaults
-        $this->header = hex2bin('45544446000000000000000000000000010200000000000000000000000000000000040b1b0b0e000000000000000000');
+        $this->header = \hex2bin('45544446000000000000000000000000010200000000000000000000000000000000040b1b0b0e000000000000000000');
         for ($i = 0; $i < 10; $i++) {
             $this->roomProfiles[$i] = new \de\peregrinus\progmatic\roomProfile();
             $this->disableRoomProfile($i);
