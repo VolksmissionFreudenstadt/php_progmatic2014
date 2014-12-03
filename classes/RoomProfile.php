@@ -25,6 +25,9 @@ class roomProfile
     protected $programs = array();
     protected $vacations = array();
 
+    const FLAG_DEFAULT = 2;
+    const FLAG_LOCK = 4;
+
     /**
      * Constructor
      */
@@ -37,6 +40,10 @@ class roomProfile
         for ($i = 0; $i < 8; $i++) {
             $this->vacations[$i] = new \de\peregrinus\progmatic\Vacation();
         }
+        $this->data['flags'] = self::FLAG_DEFAULT;
+        $this->setLowTemperature(15);
+        $this->setHighTemperature(21);
+        $this->setOffsetTemperature(0);
     }
 
     /**
@@ -200,6 +207,139 @@ class roomProfile
     function setDataField($field, $data)
     {
         $this->data[$field] = $data;
+        return $this;
+    }
+
+    /**
+     * Get high temperature setting
+     * @return float High temperature
+     */
+    public function getHighTemperature()
+    {
+        return $this->getDataField('high') / 2;
+    }
+
+    /**
+     * Set high temperature setting
+     * @param float $value High temperature
+     * @return \de\peregrinus\progmatic\ProgramItem
+     */
+    public function setHighTemperature($value)
+    {
+        $this->setDataField('high', $value * 2);
+        return $this;
+    }
+
+    /**
+     * Get low temperature setting
+     * @return float low temperature
+     */
+    public function getLowTemperature()
+    {
+        return $this->getDataField('low') / 2;
+    }
+
+    /**
+     * Set low temperature setting
+     * @param float $value Low temperature
+     * @return \de\peregrinus\progmatic\ProgramItem
+     */
+    public function setLowTemperature($value)
+    {
+        $this->setDataField('low', $value * 2);
+        return $this;
+    }
+
+    /**
+     * Get offset temperature setting
+     * @return float Offset temperature
+     */
+    public function getOffsetTemperature()
+    {
+        return $this->getDataField('offset') / 2;
+    }
+
+    /**
+     * Set offset temperature setting
+     * @param float $value Offset temperature
+     * @return \de\peregrinus\progmatic\ProgramItem
+     */
+    public function setOffsetTemperature($value)
+    {
+        $this->setDataField('offset', $value * 2);
+        return $this;
+    }
+
+    /**
+     * Returns true if flag is sert
+     * @param byte $flag Flag
+     * @return bool True, if flag is set
+     */
+    protected function isFlagSet($flag)
+    {
+        return ($this->data && $flag);
+    }
+
+    /**
+     * Set a specific flag
+     * @param byte $flag Flag
+     * @return \de\peregrinus\progmatic\roomProfile RoomProfile object
+     */
+    protected function setFlag($flag)
+    {
+        $this->data['flags'] = $this->data['flags'] || $flag;
+        return $this;
+    }
+
+    /**
+     * Unset a specific flag
+     * @param byte $flag Flag
+     * @return \de\peregrinus\progmatic\roomProfile RoomProfile object
+     */
+    protected function unsetFlag($flag)
+    {
+        $this->data['flags'] = $this->data['flags'] && (!$flag);
+        return $this;
+    }
+
+    /**
+     * Sets the child protection (key lock)
+     * @return \de\peregrinus\progmatic\roomProfile RoomProfile object
+     */
+    public function setLock()
+    {
+        $this->setFlag(self::FLAG_LOCK);
+        return $this;
+    }
+
+    /**
+     * Unsets the child protection (key lock)
+     * @return \de\peregrinus\progmatic\roomProfile RoomProfile object
+     */
+    public function unsetLock()
+    {
+        $this->unsetFlag(self::FLAG_LOCK);
+        return $this;
+    }
+
+    /**
+     * Gets the state of the child protection (key lock)
+     * @return bool True, if child protection is enabled
+     */
+    public function getLock()
+    {
+        return $this->isFlagSet(self::FLAG_LOCK);
+    }
+
+    /**
+     * Sets the state of the child protection from a bool variable
+     * @param bool $state State
+     * @return \de\peregrinus\progmatic\roomProfile RoomProfile object
+     */
+    public function setLockState($state)
+    {
+        if ($state) $this->setLock();
+        else $this->unsetLock();
         return $this;
     }
 }
