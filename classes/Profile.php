@@ -11,7 +11,7 @@ require_once('RoomProfile.php');
  */
 class profile
 {
-    protected $header       = '';
+    protected $header = '';
     protected $roomProfiles = array();
 
     /**
@@ -23,6 +23,7 @@ class profile
         $this->header = hex2bin('45544446000000000000000000000000010200000000000000000000000000000000040b1b0b0e000000000000000000');
         for ($i = 0; $i < 10; $i++) {
             $this->roomProfiles[$i] = new \de\peregrinus\progmatic\roomProfile();
+            $this->disableRoomProfile($i);
         }
     }
 
@@ -39,7 +40,7 @@ class profile
             echo 'found.<br />';
             $obj = new self();
 
-            $fp   = fopen($fileName, 'r');
+            $fp = fopen($fileName, 'r');
             // read header
             $temp = fread($fp, 48);
             $temp = unpack('A48header', $temp);
@@ -51,15 +52,15 @@ class profile
             // read 10 room profiles
             for ($i = 0; $i < 10; $i++) {
                 $temp = fread($fp, 200);
-                $rp   = $obj->getRoomProfile($i);
+                $rp = $obj->getRoomProfile($i);
                 $rp->importRawData($temp);
             }
 
             // read 10 room profile titles
             for ($i = 0; $i < 10; $i++) {
-                $temp  = unpack('A32title', fread($fp, 64));
+                $temp = unpack('A32title', fread($fp, 64));
                 $title = str_replace('#', '', $temp['title']);
-                $rp    = $obj->getRoomProfile($i);
+                $rp = $obj->getRoomProfile($i);
                 $rp->setTitle($title);
             }
 
@@ -115,5 +116,53 @@ class profile
         $fp = fopen($fileName, 'w');
         fwrite($fp, $this->exportRawData());
         fclose($fp);
+    }
+
+    /**
+     * Split the header into an array
+     *
+     * @return array Header data
+     */
+    private function getHeaderAsArray()
+    {
+        return str_split($this->header);
+    }
+
+    /**
+     * Set header data from array
+     *
+     * @param array $headerArray Header data
+     */
+    private function setHeaderAsArray($headerArray)
+    {
+        $this->header = join('', $headerArray);
+    }
+
+    /**
+     * Set a single byte value in the header array
+     * @param int $offset Offset
+     * @param char $value Value
+     * @return void
+     */
+    protected function setHeaderByte($offset, $value)
+    {
+        $header = $this->getHeaderAsArray();
+        $header[$offset] = chr($value);
+        $this->setHeaderAsArray($header);
+    }
+
+    /**
+     * Enable a specific room profile
+     * @param int $index Room profile number (0-9)
+     * @return void
+     */
+    public function enableRoomProfile($index)
+    {
+        $this->setHeaderByte(16 + $index, $index + 1);
+    }
+
+    public function disableRoomProfile($index)
+    {
+        $this->setHeaderByte(16 + $index, 0);
     }
 }

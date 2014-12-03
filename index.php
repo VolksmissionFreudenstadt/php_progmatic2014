@@ -9,7 +9,12 @@ echo '<pre>Loading profile ...<br />';
 //$profile = \de\peregrinus\progmatic\profile::fromFile('Profile5.dat');
 
 $profile = new \de\peregrinus\progmatic\profile();
-$profile->getRoomProfile(0)->setTitle('Lila Saal');
+
+for ($i = 0; $i < 10; $i++) {
+    $profile->enableRoomProfile($i);
+    $profile->getRoomProfile($i)->setTitle('Profil'.($i + 1));
+}
+
 $profile->getRoomProfile(0)->getProgram(0)->getItem(0)->setDataManually(0, 1, 0,
     2);
 
