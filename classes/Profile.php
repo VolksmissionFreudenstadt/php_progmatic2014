@@ -75,10 +75,12 @@ class profile
     /**
      * Set the header data
      * @param string $data Data
+     * @return \de\peregrinus\progmatic\profile Profile object
      */
     public function setHeader($data)
     {
         $this->header = $data;
+        return $this;
     }
 
     /**
@@ -110,12 +112,14 @@ class profile
     /**
      * Write to a .dat file
      * @param string $fileName File name
+     * @return \de\peregrinus\progmatic\profile Profile object
      */
     public function toFile($fileName)
     {
         $fp = fopen($fileName, 'w');
         fwrite($fp, $this->exportRawData());
         fclose($fp);
+        return $this;
     }
 
     /**
@@ -132,37 +136,47 @@ class profile
      * Set header data from array
      *
      * @param array $headerArray Header data
+     * @return \de\peregrinus\progmatic\profile Profile object
      */
     private function setHeaderAsArray($headerArray)
     {
         $this->header = join('', $headerArray);
+        return $this;
     }
 
     /**
      * Set a single byte value in the header array
      * @param int $offset Offset
      * @param char $value Value
-     * @return void
+     * @return \de\peregrinus\progmatic\profile Profile object
      */
     protected function setHeaderByte($offset, $value)
     {
         $header = $this->getHeaderAsArray();
         $header[$offset] = chr($value);
         $this->setHeaderAsArray($header);
+        return $this;
     }
 
     /**
      * Enable a specific room profile
      * @param int $index Room profile number (0-9)
-     * @return void
+     * @return \de\peregrinus\progmatic\profile Profile object
      */
     public function enableRoomProfile($index)
     {
         $this->setHeaderByte(16 + $index, $index + 1);
+        return $this;
     }
 
+    /**
+     * Disable a specific room profile
+     * @param int $index Room profile number (0..9)
+     * @return \de\peregrinus\progmatic\profile Profile object
+     */
     public function disableRoomProfile($index)
     {
         $this->setHeaderByte(16 + $index, 0);
+        return $this;
     }
 }
