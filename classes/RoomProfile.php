@@ -277,7 +277,7 @@ class roomProfile
      */
     protected function isFlagSet($flag)
     {
-        return ($this->data && $flag);
+        return ($this->data & $flag);
     }
 
     /**
@@ -287,7 +287,7 @@ class roomProfile
      */
     protected function setFlag($flag)
     {
-        $this->data['flags'] = $this->data['flags'] || $flag;
+        $this->data['flags'] = $this->data['flags'] | $flag;
         return $this;
     }
 
@@ -298,7 +298,7 @@ class roomProfile
      */
     protected function unsetFlag($flag)
     {
-        $this->data['flags'] = $this->data['flags'] && (!$flag);
+        $this->data['flags'] = $this->data['flags'] & (~$flag);
         return $this;
     }
 
