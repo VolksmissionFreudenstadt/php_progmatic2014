@@ -22,7 +22,7 @@ class roomProfile
      */
     protected $title;
     protected $data;
-    protected $programs  = array();
+    protected $programs = array();
     protected $vacations = array();
 
     /**
@@ -158,6 +158,48 @@ class roomProfile
                                 \de\peregrinus\progmatic\Vacation $vacation)
     {
         $this->vacations[$index] = $vacation;
+        return $this;
+    }
+
+    /**
+     * Get whole data array
+     * @return array
+     */
+    function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set whole data array
+     * @param array $data
+     * @return \de\peregrinus\progmatic\ProgramItem
+     */
+    function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Get specific data field
+     * @param string $field Field name
+     * @return array
+     */
+    function getDataField($field)
+    {
+        return $this->data[$field];
+    }
+
+    /**
+     * Set specific data field
+     * @param string $field Field name
+     * @param array $data Data
+     * @return \de\peregrinus\progmatic\ProgramItem
+     */
+    function setDataField($field, $data)
+    {
+        $this->data[$field] = $data;
         return $this;
     }
 }
